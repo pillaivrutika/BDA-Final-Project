@@ -66,7 +66,7 @@ ggplot(as.data.frame(top_users), aes(x = reorder(Var1, -Freq), y = Freq)) +
   labs(title = "Top 10 Users with Most Reviews", x = "User ID", y = "Number of Reviews") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-# Plot 18: Cumulative Reviews Over Time
+# Plot 13: Cumulative Reviews Over Time
 data <- data[order(data$review.time), ]
 data$cum_reviews <- seq_len(nrow(data))
 
@@ -74,7 +74,7 @@ ggplot(data, aes(x = review.time, y = cum_reviews)) +
   geom_line(color = "blue") +
   labs(title = "Cumulative Reviews Over Time", x = "Time", y = "Cumulative Reviews")
 
-# Plot 19: Boxplot of Ratings by Price Quartiles
+# Plot 14: Boxplot of Ratings by Price Quartiles
 data$price_quartile <- cut(data$Price, breaks = quantile(data$Price, probs = seq(0, 1, by = 0.25), na.rm = TRUE))
 
 ggplot(data, aes(x = price_quartile, y = review.score)) +
