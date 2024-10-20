@@ -1,0 +1,89 @@
+library(ggplot2)
+
+# Plot 1: Histogram of Book Prices
+ggplot(data, aes(x = Price)) +
+  geom_histogram(bins = 50, fill = "blue", color = "black") +
+  labs(title = "Distribution of Book Prices", x = "Price", y = "Frequency")
+# Plot 2: Boxplot of Book Prices
+ggplot(data, aes(x = "", y = Price)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(title = "Boxplot of Book Prices", x = "", y = "Price")
+
+# Plot 3: Density Plot of Book Ratings
+ggplot(data, aes(x = review.score)) +
+  geom_density(fill = "orange") +
+  labs(title = "Density of Book Ratings", x = "Rating", y = "Density")
+
+# Plot 4: Scatter Plot of Book Prices vs Ratings
+ggplot(data, aes(x = Price, y = review.score)) +
+  geom_point(alpha = 0.5) +
+  labs(title = "Scatter Plot of Book Prices vs Ratings", x = "Price", y = "Rating")
+
+# Plot 5: Time Series of Reviews
+data$review.time <- as.POSIXct(data$review.time, origin = "1970-01-01")
+ggplot(data, aes(x = review.time)) +
+  geom_histogram(binwidth = 60*60*24*30, fill = "pink", color = "black") +
+  labs(title = "Number of Reviews Over Time", x = "Time", y = "Count")
+
+# Plot 6: Top 10 Most Reviewed Books
+top_books <- head(sort(table(data$Title), decreasing = TRUE), 10)
+ggplot(data = as.data.frame(top_books), aes(x = reorder(Var1, -Freq), y = Freq)) +
+  geom_bar(stat = "identity", fill = "cyan") +
+  labs(title = "Top 10 Most Reviewed Books", x = "Book Title", y = "Number of Reviews") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# Plot 7: Average Rating per User
+avg_user_rating <- aggregate(review.score ~ User_id, data, mean)
+ggplot(avg_user_rating, aes(x = User_id, y = review.score)) +
+  geom_point(alpha = 0.7, color = "red") +
+  labs(title = "Average Rating per User", x = "User ID", y = "Average Rating")
+
+# Plot 8: Pie Chart of Ratings Distribution
+rating_dist <- table(data$review.score)
+pie(rating_dist, labels = paste(names(rating_dist), ": ", rating_dist), main = "Ratings Distribution")
+
+# Plot 9: Heatmap of Price by Rating and Helpfulness
+ggplot(data_melt, aes(x = review.score, y = review.helpfulness, fill = Price)) +
++     geom_tile() +
++     scale_fill_gradient(low = "yellow", high = "red") +
++     labs(title = "Heatmap of Price by Rating and Helpfulness", x = "Rating", y = "Helpfulness Fraction")
+
+# Plot 10: Violin Plot of Book Ratings
+ggplot(data, aes(x = as.factor(review.score), y = Price)) +
+  geom_violin(fill = "lightgreen") +
+  labs(title = "Violin Plot of Book Ratings", x = "Rating", y = "Price")
+
+# Plot 11: Review Length Distribution
+data$review_length <- nchar(data$review.text)
+ggplot(data, aes(x = review_length)) +
+  geom_histogram(bins = 50, fill = "coral") +
+  labs(title = "Distribution of Review Lengths", x = "Review Length (characters)", y = "Count")
+
+# Plot 12: Top 10 Users with Most Reviews
+top_users <- head(sort(table(data$User_id), decreasing = TRUE), 10)
+ggplot(as.data.frame(top_users), aes(x = reorder(Var1, -Freq), y = Freq)) +
+  geom_bar(stat = "identity", fill = "lightblue") +
+  labs(title = "Top 10 Users with Most Reviews", x = "User ID", y = "Number of Reviews") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Plot 18: Cumulative Reviews Over Time
+data <- data[order(data$review.time), ]
+data$cum_reviews <- seq_len(nrow(data))
+
+ggplot(data, aes(x = review.time, y = cum_reviews)) +
+  geom_line(color = "blue") +
+  labs(title = "Cumulative Reviews Over Time", x = "Time", y = "Cumulative Reviews")
+
+# Plot 19: Boxplot of Ratings by Price Quartiles
+data$price_quartile <- cut(data$Price, breaks = quantile(data$Price, probs = seq(0, 1, by = 0.25), na.rm = TRUE))
+
+ggplot(data, aes(x = price_quartile, y = review.score)) +
+  geom_boxplot(fill = "cyan") +
+  labs(title = "Ratings by Price Quartiles", x = "Price Quartile", y = "Rating")
+
+
+
+
+
+
+
